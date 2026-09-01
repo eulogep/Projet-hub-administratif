@@ -1,0 +1,3 @@
+export default function OrganizationsLoading() {
+  return <main id="main-content" tabIndex={-1} aria-busy="true" aria-label="Chargement des organisations" className="mx-auto w-full max-w-5xl space-y-6 px-4 py-7 outline-none sm:px-6 sm:py-9"><div className="h-24 animate-pulse rounded-xl bg-muted motion-reduce:animate-none" /><div className="h-72 animate-pulse rounded-2xl border bg-card motion-reduce:animate-none" /></main>;
+}

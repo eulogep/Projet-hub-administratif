@@ -28,7 +28,9 @@ function NavigationLink({ item, compact = false }: { item: NavigationItem; compa
           : "gap-3 px-3 py-2.5",
         active
           ? "bg-sidebar-active text-sidebar-active-foreground"
-          : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground",
+          : compact
+            ? "text-muted-foreground hover:bg-muted hover:text-foreground"
+            : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground",
       )}
     >
       <Icon aria-hidden="true" className={cn("shrink-0", compact ? "size-5" : "size-4")} />

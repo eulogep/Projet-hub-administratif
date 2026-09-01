@@ -8,7 +8,7 @@ export default async function HubPage() {
   const organizations = await listOrganizations(workspace.id);
 
   return (
-    <main id="main-content" className="mx-auto w-full max-w-7xl space-y-7 px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-7xl space-y-7 px-4 py-7 outline-none sm:px-6 sm:py-9 lg:px-8">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
           <p className="text-sm font-medium text-primary">Espace protégé</p>

@@ -8,7 +8,7 @@ export function AppShell({ children, email }: { children: React.ReactNode; email
     <div className="min-h-dvh bg-background lg:grid lg:grid-cols-[16.5rem_minmax(0,1fr)]">
       <a
         href="#main-content"
-        className="fixed left-4 top-4 z-50 -translate-y-24 rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background transition-transform focus:translate-y-0"
+        className="skip-link fixed left-4 top-4 z-50 rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background shadow-lg"
       >
         Aller au contenu principal
       </a>
@@ -79,4 +79,3 @@ export function AppShell({ children, email }: { children: React.ReactNode; email
     </div>
   );
 }
-

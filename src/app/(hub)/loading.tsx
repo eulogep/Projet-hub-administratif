@@ -1,6 +1,6 @@
 export default function HubLoading() {
   return (
-    <main id="main-content" aria-busy="true" aria-label="Chargement de la page" className="mx-auto w-full max-w-7xl px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
+    <main id="main-content" tabIndex={-1} aria-busy="true" aria-label="Chargement de la page" className="mx-auto w-full max-w-7xl px-4 py-7 outline-none sm:px-6 sm:py-9 lg:px-8">
       <div className="animate-pulse space-y-7 motion-reduce:animate-none">
         <div className="space-y-3">
           <div className="h-4 w-28 rounded bg-muted" />
@@ -12,4 +12,3 @@ export default function HubLoading() {
     </main>
   );
 }
-

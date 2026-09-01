@@ -1,5 +1,7 @@
 # 4. Backlog MVP
 
+> **Référence fonctionnelle historique.** La numérotation `T-XXXX` est désormais le seul système officiel d’exécution et de statut. Les entrées `HUB-XXX` ci-dessous servent uniquement à conserver la conception fonctionnelle initiale. Aucun nouveau ticket `HUB-XXX` ne doit être créé.
+
 ## Définition du MVP utilisable
 
 Un utilisateur authentifié peut configurer ses deux contextes, saisir ses données, retrouver un objet, voir sa journée et ses échéances, suivre ses 7 h CROUS, puis exporter ses données. Aucun connecteur externe n’est nécessaire pour atteindre cette valeur.
@@ -174,4 +176,3 @@ Un utilisateur authentifié peut configurer ses deux contextes, saisir ses donn�
 4. Mise en confiance : HUB-018 à HUB-020.
 
 Le premier incrément démontrable s’arrête à organisations + tâches + calendrier + heures CROUS. Les documents ne doivent recevoir de vraies pièces qu’après validation de la sécurité et de la sauvegarde.
-

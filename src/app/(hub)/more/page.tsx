@@ -6,7 +6,7 @@ export default function MorePage() {
   const groups = navigationGroups.filter((group) => group.label !== "Vue d’ensemble");
 
   return (
-    <main id="main-content" className="mx-auto w-full max-w-3xl px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
+    <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-3xl px-4 py-7 outline-none sm:px-6 sm:py-9 lg:px-8">
       <p className="text-sm font-medium text-primary">Navigation</p>
       <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Plus</h1>
       <div className="mt-7 space-y-6">
@@ -33,4 +33,3 @@ export default function MorePage() {
     </main>
   );
 }
-

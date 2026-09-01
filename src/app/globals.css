@@ -80,6 +80,16 @@ body {
   scroll-margin: 6rem;
 }
 
+.skip-link {
+  transform: translateY(calc(-100% - 1rem));
+}
+
+.skip-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
