@@ -1,7 +1,18 @@
-import { ListTodo } from "lucide-react";
-import { ModulePlaceholder } from "@/components/shell/module-placeholder";
+import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
+import { getActiveWorkspace } from "@/lib/auth/get-active-workspace";
+import { listMissions } from "@/modules/missions/services/mission.service";
+import { missionStatuses, missionStatusLabels } from "@/modules/missions/schemas/mission.schema";
+import { listOrganizations } from "@/modules/organizations/services/list-organizations";
 
-export default function MissionsPage() {
-  return <ModulePlaceholder eyebrow="Travail" title="Missions" icon={ListTodo} description="Le suivi des missions sera activé avec son modèle de données et ses règles de statut dans un ticket dédié." />;
+export default async function MissionsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const params = await searchParams; const workspace = await getActiveWorkspace();
+  const archive = params.archive === "archived" ? "archived" : "active"; const status = typeof params.status === "string" && missionStatuses.includes(params.status as never) ? params.status : undefined; const organizationId = typeof params.organization === "string" ? params.organization : undefined;
+  const [missions, organizations] = await Promise.all([listMissions(workspace.id, archive, organizationId, status), listOrganizations(workspace.id)]);
+  return <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-6xl space-y-6 px-4 py-7 outline-none sm:px-6 sm:py-9"><div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-sm font-medium text-primary">Travail</p><h1 className="mt-1 text-2xl font-semibold">Missions</h1><p className="mt-1 text-sm text-muted-foreground">Organisez vos objectifs professionnels et leurs tâches.</p></div><Link href="/missions/new" className={buttonVariants()}>Nouvelle mission</Link></div>
+    <Card><CardHeader><CardTitle>Filtres</CardTitle></CardHeader><CardContent><form className="grid gap-3 sm:grid-cols-3 lg:grid-cols-4"><select name="archive" defaultValue={archive} aria-label="État d’archivage" className="h-11 rounded-md border bg-background px-3"><option value="active">Actives</option><option value="archived">Archivées</option></select><select name="status" defaultValue={status ?? ""} aria-label="Statut de mission" className="h-11 rounded-md border bg-background px-3"><option value="">Tous les statuts</option>{missionStatuses.map((value) => <option key={value} value={value}>{missionStatusLabels[value]}</option>)}</select><select name="organization" defaultValue={organizationId ?? ""} aria-label="Organisation" className="h-11 rounded-md border bg-background px-3"><option value="">Toutes les organisations</option>{organizations.map((organization) => <option key={organization.id} value={organization.id}>{organization.name}</option>)}</select><button className={buttonVariants({ variant: "outline" })}>Appliquer</button></form></CardContent></Card>
+    {missions.length ? <ul className="grid gap-4 md:grid-cols-2">{missions.map((mission) => <li key={mission.id}><Card className="h-full"><CardHeader><CardTitle><Link href={`/missions/${mission.id}`} className="text-primary hover:underline">{mission.title}</Link></CardTitle></CardHeader><CardContent><p className="text-sm">{mission.organization?.name ?? "Organisation archivée"}</p><p className="text-sm text-muted-foreground">{missionStatusLabels[mission.status]}{mission.target_ends_on ? ` · cible ${mission.target_ends_on}` : ""}</p></CardContent></Card></li>)}</ul> : <div className="rounded-xl border border-dashed p-10 text-center"><h2 className="text-lg font-semibold">Aucune mission</h2><p className="mt-2 text-sm text-muted-foreground">Créez votre première mission ou modifiez les filtres.</p></div>}
+  </main>;
 }
 

@@ -1,0 +1,1 @@
+export default function MissionsLoading() { return <main id="main-content" className="mx-auto w-full max-w-6xl animate-pulse space-y-5 px-4 py-7" aria-busy="true" aria-label="Chargement des missions"><div className="h-9 w-48 rounded bg-muted" /><div className="h-32 rounded-2xl bg-muted" /><div className="h-48 rounded-2xl bg-muted" /></main>; }
