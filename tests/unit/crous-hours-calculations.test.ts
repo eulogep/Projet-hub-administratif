@@ -1,0 +1,10 @@
+import { describe, expect, it } from "vitest";
+import { formatMinutes, groupTotals, isoWeekKey, monthKey, overlaps, parisLocalToIso, summarizeHours } from "@/modules/crous-hours/services/crous-hours.calculations";
+const log = (id: string, starts_at: string, credited_minutes: number) => ({ id, workspace_id: "11111111-1111-4111-8111-111111111111", period_id: "22222222-2222-4222-8222-222222222222", starts_at, ends_at: new Date(new Date(starts_at).getTime() + 3600000).toISOString(), calculated_minutes: 60, credited_minutes, adjustment_reason: null, notes: null, archived_at: null });
+describe("CROUS hour calculations", () => {
+  it("formats and separates remaining from overrun", () => { expect(formatMinutes(125)).toBe("2 h 05"); expect(summarizeHours([log("33333333-3333-4333-8333-333333333333", "2026-09-01T08:00:00Z", 130)], 120)).toEqual({ realized: 130, remaining: 0, overrun: 10 }); });
+  it("uses Europe/Paris month and ISO week keys across a year boundary", () => { expect(monthKey("2026-12-31T23:30:00Z")).toBe("2027-01"); expect(isoWeekKey("2027-01-01T10:00:00Z")).toBe("2026-W53"); });
+  it("treats exact boundaries as non-overlapping", () => { expect(overlaps({ starts_at: "2026-09-01T08:00:00Z", ends_at: "2026-09-01T09:00:00Z" }, { starts_at: "2026-09-01T09:00:00Z", ends_at: "2026-09-01T10:00:00Z" })).toBe(false); expect(overlaps({ starts_at: "2026-09-01T08:00:00Z", ends_at: "2026-09-01T09:30:00Z" }, { starts_at: "2026-09-01T09:00:00Z", ends_at: "2026-09-01T10:00:00Z" })).toBe(true); });
+  it("aggregates integer credited minutes", () => { expect(groupTotals([log("44444444-4444-4444-8444-444444444444", "2026-09-01T08:00:00Z", 45), log("55555555-5555-4555-8555-555555555555", "2026-09-02T08:00:00Z", 30)], isoWeekKey)).toEqual({ "2026-W36": 75 }); });
+  it("converts Paris local time independently from the server timezone", () => { expect(parisLocalToIso("2026-09-01T09:00")).toBe("2026-09-01T07:00:00.000Z"); expect(parisLocalToIso("2026-03-29T02:30")).toBe("2026-03-29T02:30"); });
+});

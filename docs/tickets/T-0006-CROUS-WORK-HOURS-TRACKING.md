@@ -1,6 +1,6 @@
 # T-0006 — CROUS Work Hours Tracking
 
-Status: `READY_FOR_APPROVAL`
+Status: `APPROVED`
 
 ## TITLE
 
@@ -195,6 +195,18 @@ Both tables enable RLS with workspace-owner `SELECT`, `INSERT`, `UPDATE`, and `D
 - Keep HUB-012 as historical traceability only; never create another HUB execution ticket.
 - Never quote or copy the local professional resource or record its real values.
 
+## IMPLEMENTATION_EVIDENCE
+
+- A clean Supabase reset applied migrations T-0001 through T-0006 successfully.
+- TypeScript typecheck and ESLint pass.
+- Unit tests pass: 6 files, 19 tests.
+- Database and RLS tests pass: 14 tests.
+- The Next.js production build passes with 21 route entries.
+- End-to-end regression passes: 9 tests covering authentication, organizations, contacts, missions/tasks, and CROUS hours.
+- Git diff whitespace validation passes.
+- A targeted scope audit confirms no Calendar, payroll, export, external integration, geolocation, service-role client, secret, or real professional data was introduced.
+- The local professional resource and `audit-projet.md` remain untracked and were not added to Git.
+
 ## DONE_WHEN
 
 - Explicit human approval authorizes implementation.
@@ -202,7 +214,7 @@ Both tables enable RLS with workspace-owner `SELECT`, `INSERT`, `UPDATE`, and `D
 - Period/log CRUD, duration, adjustment, overlap, aggregation, archive, responsive, and accessibility criteria pass.
 - T-0001 through T-0005 regressions remain green.
 - The final diff contains no Calendar implementation, payroll, exports, integrations, secrets, real data, or generated artifacts.
-- Documentation is current and T-0006 is `READY_FOR_REVIEW`.
+- Documentation is current and T-0006 is `APPROVED`.
 - T-0006 is not `APPROVED` before explicit human review.
 
-T-0006: READY_FOR_APPROVAL
+T-0006: APPROVED

@@ -1,0 +1,1 @@
+export default function CrousHoursLoading() { return <main id="main-content" className="mx-auto w-full max-w-6xl animate-pulse space-y-5 px-4 py-7" aria-busy="true" aria-label="Chargement des heures CROUS"><div className="h-9 w-48 rounded bg-muted" /><div className="h-32 rounded-2xl bg-muted" /><div className="h-52 rounded-2xl bg-muted" /></main>; }

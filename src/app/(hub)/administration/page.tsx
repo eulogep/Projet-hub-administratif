@@ -1,7 +1,3 @@
-import { ScrollText } from "lucide-react";
-import { ModulePlaceholder } from "@/components/shell/module-placeholder";
-
-export default function AdministrationPage() {
-  return <ModulePlaceholder eyebrow="Suivi" title="Administration" icon={ScrollText} description="Les contrats et démarches administratives seront ajoutés après les organisations et les documents privés." />;
-}
+import Link from "next/link"; import { Clock3, ScrollText } from "lucide-react"; import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; import { buttonVariants } from "@/components/ui/button";
+export default function AdministrationPage() { return <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-5xl space-y-6 px-4 py-7 outline-none sm:px-6 sm:py-9"><div><p className="text-sm font-medium text-primary">Suivi</p><h1 className="mt-1 flex items-center gap-3 text-2xl font-semibold"><ScrollText className="size-6" />Administration</h1></div><Card><CardHeader><CardTitle>Heures CROUS</CardTitle></CardHeader><CardContent><p className="text-sm text-muted-foreground">Suivez les interventions, objectifs et totaux sans données de paie.</p><Link href="/crous-hours" className={buttonVariants()}><Clock3 className="size-4" />Ouvrir le suivi</Link></CardContent></Card></main>; }
 
