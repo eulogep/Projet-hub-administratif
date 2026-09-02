@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   ListTodo,
   MoreHorizontal,
+  FolderKanban,
   ScrollText,
   Settings2,
   type LucideIcon,
@@ -33,6 +34,7 @@ export const navigationGroups: NavigationGroup[] = [
   {
     label: "Travail",
     items: [
+      { href: "/projects", label: "Projets", icon: FolderKanban },
       { href: "/missions", label: "Missions", icon: ListTodo },
       { href: "/tasks", label: "Tâches", icon: CheckSquare2 },
     ],
@@ -65,4 +67,3 @@ export const mobileNavigation: NavigationItem[] = [
 ];
 
 export const allNavigationItems = navigationGroups.flatMap((group) => group.items);
-

@@ -10,6 +10,7 @@ import { missionInputSchema } from "../schemas/mission.schema";
 export type MissionActionState = { message?: string; fieldErrors?: Record<string, string[] | undefined> };
 const values = (formData: FormData) => ({
   organization_id: formData.get("organization_id"), title: formData.get("title"),
+  project_id: formData.get("project_id"),
   description: formData.get("description"), status: formData.get("status"),
   starts_on: formData.get("starts_on"), target_ends_on: formData.get("target_ends_on"),
 });
@@ -23,11 +24,21 @@ async function organizationIsAvailable(workspaceId: string, organizationId: stri
   return !result.error && Boolean(result.data);
 }
 
+async function projectIsAvailable(workspaceId: string, organizationId: string, projectId: string | null, activeOnly = true) {
+  if (!projectId) return true;
+  const supabase = await createClient();
+  let query = supabase.from("projects").select("id").eq("workspace_id", workspaceId).eq("organization_id", organizationId).eq("id", projectId);
+  if (activeOnly) query = query.is("archived_at", null);
+  const result = await query.maybeSingle();
+  return !result.error && Boolean(result.data);
+}
+
 export async function createMissionAction(_state: MissionActionState, formData: FormData): Promise<MissionActionState> {
   const parsed = missionInputSchema.safeParse(values(formData));
   if (!parsed.success) return { message: "Corrigez les champs indiqués.", fieldErrors: parsed.error.flatten().fieldErrors };
   const workspace = await getActiveWorkspace();
   if (!await organizationIsAvailable(workspace.id, parsed.data.organization_id)) return { message: "Cette organisation est indisponible." };
+  if (!await projectIsAvailable(workspace.id, parsed.data.organization_id, parsed.data.project_id)) return { message: "Ce projet est indisponible pour cette organisation." };
   const supabase = await createClient();
   const { data, error } = await supabase.from("missions").insert({ workspace_id: workspace.id, ...parsed.data }).select("id").single();
   if (error || !data) return { message: errorMessage(error?.code) };
@@ -41,10 +52,12 @@ export async function updateMissionAction(missionId: string, _state: MissionActi
   if (!id.success || !parsed.success) return { message: "Corrigez les champs indiqués.", fieldErrors: parsed.success ? undefined : parsed.error.flatten().fieldErrors };
   const workspace = await getActiveWorkspace();
   const supabase = await createClient();
-  const current = await supabase.from("missions").select("organization_id").eq("workspace_id", workspace.id).eq("id", id.data).maybeSingle();
+  const current = await supabase.from("missions").select("organization_id, project_id").eq("workspace_id", workspace.id).eq("id", id.data).maybeSingle();
   if (current.error || !current.data) return { message: "Cette mission est introuvable." };
   const organizationChanged = current.data.organization_id !== parsed.data.organization_id;
   if (!await organizationIsAvailable(workspace.id, parsed.data.organization_id, organizationChanged)) return { message: "Cette organisation est indisponible." };
+  const projectChanged = current.data.project_id !== parsed.data.project_id || organizationChanged;
+  if (!await projectIsAvailable(workspace.id, parsed.data.organization_id, parsed.data.project_id, projectChanged)) return { message: "Ce projet est indisponible pour cette organisation." };
   const { data, error } = await supabase.from("missions").update(parsed.data).eq("workspace_id", workspace.id).eq("id", id.data).select("id").maybeSingle();
   if (error) return { message: errorMessage(error.code) };
   if (!data) return { message: "Cette mission est introuvable." };
