@@ -16,7 +16,7 @@ Branch:
 main
 
 Commit:
-07a872a (verified handoff baseline; continuity contract follows)
+f00960b (verified cross-machine continuity baseline)
 
 Current ticket:
 T-0008 — Private Documents

@@ -40,11 +40,11 @@ Source checkout: `D:\PROJET HUB ADMINISTRATIF`
 
 ## Last verified commit
 
-`07a872a` — verified handoff baseline. Its parent `74743c4` is the T-0008 application implementation.
+`f00960b` — verified cross-machine continuity baseline. Commit `74743c4` contains the T-0008 application implementation.
 
 ## Remote state
 
-`origin/main` was verified at `07a872a` after the non-forced handoff push. The continuity contract is completed by the subsequent documented commit; verify `git status --short` and `git log -3 --oneline` after cloning.
+The complete continuity contract was pushed as `f00960b` without force. A following documentation-only commit records that SHA durably; verify `git status --short` and `git log -3 --oneline` after cloning.
 
 ## What has already been completed
 
