@@ -40,11 +40,11 @@ Source checkout: `D:\PROJET HUB ADMINISTRATIF`
 
 ## Last verified commit
 
-`74743c4` — T-0008 application implementation. The handoff commit following it changes only README, ignore rules, and `.agent/memory`.
+`07a872a` — verified handoff baseline. Its parent `74743c4` is the T-0008 application implementation.
 
 ## Remote state
 
-Before handoff finalization, `origin/main` was `694b38f` and local `main` contained `bc311e7` plus `74743c4`. The handoff workflow pushes `main` without force; verify the final remote HEAD after cloning.
+`origin/main` was verified at `07a872a` after the non-forced handoff push. The continuity contract is completed by the subsequent documented commit; verify `git status --short` and `git log -3 --oneline` after cloning.
 
 ## What has already been completed
 
@@ -235,4 +235,4 @@ npm run test:e2e
 
 ## Exact resume prompt
 
-Read `AGENTS.md`, `.agent/memory/STATE.md`, `.agent/memory/HANDOFF.md`, `docs/project/PROJECT-STATE.md` and the T-0008 implementation report. Verify the clean clone and local Supabase setup on macOS. Do not start T-0009. Resume only the real T-0008 R2 falsification gate after confirming the approved private EU bucket, bucket-scoped credentials and exact CORS configuration; use synthetic fixtures and report every unexecuted check as `NOT_RUN`.
+Read `AGENTS.md`, `.agent/memory/CONTEXT.md`, `.agent/memory/STATE.md`, `.agent/memory/HANDOFF.md`, `docs/project/PROJECT-STATE.md` and the T-0008 implementation report. Verify the clean clone and local Supabase setup on macOS. Do not start T-0009. Resume only the real T-0008 R2 falsification gate after confirming the approved private EU bucket, bucket-scoped credentials and exact CORS configuration; use synthetic fixtures and report every unexecuted check as `NOT_RUN`.

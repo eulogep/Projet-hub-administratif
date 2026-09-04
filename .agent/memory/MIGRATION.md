@@ -16,7 +16,7 @@ Branch:
 main
 
 Commit:
-74743c4 (verified application commit; followed only by handoff documentation)
+07a872a (verified handoff baseline; continuity contract follows)
 
 Current ticket:
 T-0008 — Private Documents
@@ -47,7 +47,7 @@ NONE for source-code setup; T-0008 release remains blocked by R2 infrastructure.
 
 Resume sequence:
 
-1. Clone `main` and read `.agent/memory/HANDOFF.md`.
+1. Clone `main` and read `.agent/memory/CONTEXT.md`, then `STATE.md` and `HANDOFF.md`.
 2. Install Node/npm/Docker dependencies and create `.env.local` from the example.
 3. Start/reset Supabase and rerun local verification.
 4. Confirm the private EU R2 configuration without exposing secrets.
