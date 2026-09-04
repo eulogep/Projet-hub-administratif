@@ -28,6 +28,11 @@
 .DS_Store
 Thumbs.db
 
+# Local private working material (never migrate through Git)
+/RESSOURCE_PROFESSIONAL_HUB_*.md
+/*.docx
+/audit-projet.md
+
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts

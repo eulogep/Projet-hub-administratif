@@ -1,136 +1,130 @@
 # Professional Hub
 
-Professional Hub is a private personal workspace. T-0001 implements the secure technical foundation: Next.js, email/password authentication, one personal workspace per user, and Row Level Security (RLS). T-0002 adds the responsive application shell, accessible navigation, design tokens, and consistent loading, error, and empty states. It intentionally contains no CRM, task management, document storage, calendar data, integrations, or AI yet.
+Professional Hub is a private personal administrative workspace built with Next.js, Supabase/PostgreSQL and Cloudflare R2. The Git repository is the technical source of truth; `docs/project/PROJECT-STATE.md` and `.agent/memory/` contain the resumable project state.
 
-The product and reuse decisions remain documented in the [Open Source Reuse Report](docs/research/PROFESSIONAL-HUB-OPEN-SOURCE-REUSE-REPORT.md).
+## Current state
+
+- T-0001 through T-0007 are approved: authentication/personal workspace, responsive shell, organizations, contacts, missions/tasks, CROUS work-hour tracking, and projects.
+- T-0008 Private Documents is implemented locally but `BLOCKED_R2_ENVIRONMENT`.
+- The real R2 release gate is not run. Do not advertise the 500 MiB target and do not start T-0009.
 
 ## Architecture
 
-- Next.js App Router, React, strict TypeScript, Tailwind CSS, and shadcn/ui primitives.
+- Next.js 16 App Router, React 19, strict TypeScript and Tailwind CSS.
 - Supabase Auth with cookie-based SSR through `@supabase/ssr`.
-- PostgreSQL tables `profiles`, `workspaces`, and `organizations`.
-- V1 ownership rule: one user owns one personal workspace through `workspaces.owner_user_id`.
-- RLS is the database authorization boundary; no `workspace_members`, invitations, teams, or advanced RBAC.
-- `bootstrap_personal_workspace()` creates the profile and workspace idempotently under the authenticated user's own database role.
-- The protected shell uses a desktop sidebar from `lg`, a five-destination mobile bar, visible keyboard focus, and a skip link.
-- Routes for future modules currently expose explicit empty states only; their business behavior remains deferred to later tickets.
+- PostgreSQL metadata with owner-workspace Row Level Security.
+- Cloudflare R2 for private T-0008 binary objects only; PostgreSQL remains the business source of truth.
+- Uppy 6 with server-side S3-compatible request signing.
+- No service-role key, public document bucket, collaboration/RBAC expansion, OCR, AI or background Worker.
 
-## Current ticket status
+## Prerequisites
 
-- T-0001 — Bootstrap, Authentication and Personal Workspace Foundation: verified.
-- T-0002 — Design System and Responsive Shell: `READY_FOR_REVIEW`.
-- T-0003 and later business modules: not started.
+- Git.
+- Node.js 20.9 or later and npm 11 or later. Last verified on Windows: Node 24.18.0 and npm 11.16.0.
+- Docker Desktop (or another Docker Engine with Compose) running.
+- Supabase CLI, installed as the pinned project dev dependency and invoked through npm scripts.
+- Playwright Chromium for E2E tests.
+- For the blocked real-R2 gate only: an approved private EU-jurisdiction R2 bucket and a bucket-scoped Object Read & Write token.
 
-## Requirements
+## Clone and install
 
-- Node.js 20.9 or later. The verified development runtime is Node.js 24.
-- npm 11 or later.
-- Docker Desktop running for the local Supabase stack.
-- Git is recommended, although the supplied workspace was not initially a Git repository.
+macOS/Linux:
 
-## Environment variables
-
-Copy `.env.example` to `.env.local`, then replace the placeholder with values returned by `npm run supabase:start`.
-
-```dotenv
-NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-local-publishable-key
-SUPABASE_TEST_URL=http://127.0.0.1:54321
-SUPABASE_TEST_PUBLISHABLE_KEY=your-local-publishable-key
+```bash
+git clone https://github.com/eulogep/Projet-hub-administratif.git
+cd Projet-hub-administratif
+npm ci
 ```
 
-These values are browser-safe only because every exposed table has RLS. Never add `SUPABASE_SERVICE_ROLE_KEY`; neither the app nor the RLS tests require it. `.env.local` and `.env.test.local` are ignored by Git.
-
-## Installation
+Windows PowerShell:
 
 ```powershell
+git clone https://github.com/eulogep/Projet-hub-administratif.git
+Set-Location Projet-hub-administratif
 npm.cmd ci
 ```
 
-On PowerShell installations that allow npm scripts, `npm ci` is equivalent.
+## Environment variables
 
-## Supabase local setup
+Copy the example file without committing the result:
 
-Start Docker Desktop, then run:
+macOS/Linux:
 
-```powershell
-npm.cmd run supabase:start
+```bash
+cp .env.example .env.local
 ```
 
-Copy the reported API URL and publishable key into `.env.local`. Local email confirmation is disabled for deterministic development and E2E tests; production may enable confirmation, in which case `/auth/callback` completes the PKCE flow.
-
-Authentication uses email/password for V1. This was chosen over magic links because the required login/logout E2E path must not depend on an external mailbox. OAuth providers are explicitly out of scope.
-
-## Database migrations
-
-Recreate the local database from zero:
+Windows PowerShell:
 
 ```powershell
-npm.cmd run db:reset
+Copy-Item .env.example .env.local
 ```
 
-The reset applies, in order:
+Local Supabase variables:
 
-1. `202608310001_identity_workspace.sql` — tables, constraints, timestamps, and idempotent workspace bootstrap.
-2. `202608310002_identity_workspace_rls.sql` — grants and per-operation RLS policies.
-3. `seed.sql` — deliberately contains no personal data. Integration tests create only generic demo organizations.
-
-## Start development
-
-```powershell
-npm.cmd run dev
+```text
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+SUPABASE_TEST_URL
+SUPABASE_TEST_PUBLISHABLE_KEY
 ```
 
-Open `http://127.0.0.1:3000/login`. A first authenticated visit calls the idempotent bootstrap and opens the protected personal workspace.
+Obtain the local URL and publishable key from `npm run supabase:start`. Never add `SUPABASE_SERVICE_ROLE_KEY`; application and tests use RLS with non-privileged clients.
 
-## Run tests
+Server-only R2 variables required to resume the T-0008 external gate:
 
-Static and unit verification:
-
-```powershell
-npm.cmd run typecheck
-npm.cmd run lint
-npm.cmd test
+```text
+R2_ACCOUNT_ID
+R2_ACCESS_KEY_ID
+R2_SECRET_ACCESS_KEY
+R2_BUCKET_NAME
+R2_ENDPOINT
+DOCUMENT_MAX_FILE_SIZE_BYTES
 ```
 
-Database integration and RLS matrix (requires local Supabase and `.env.local`):
+Obtain them from the approved Cloudflare account. The token must be scoped to the private Professional Hub bucket. The endpoint must match the EU bucket jurisdiction. Never paste secret values into documentation, Git, browser variables or test reports.
 
-```powershell
-npm.cmd run db:reset
-npm.cmd run test:db
+## Local backend and migrations
+
+Start Docker first, then run:
+
+```bash
+npm run supabase:start
+npm run db:reset
 ```
 
-Minimal browser journey (requires local Supabase and a Playwright Chromium installation):
+On Windows use `npm.cmd` in place of `npm` when PowerShell execution policy blocks `npm.ps1`.
 
-```powershell
-npx.cmd playwright install chromium
-npm.cmd run test:e2e
+`db:reset` applies every migration under `supabase/migrations/` through `202609030008_private_documents_r2.sql`, then the deliberately non-personal `supabase/seed.sql`. Tests create disposable synthetic records only.
+
+## Development
+
+```bash
+npm run dev
 ```
 
-The RLS tests create User A/Workspace A and User B/Workspace B with the publishable client. They verify cross-workspace `SELECT`, `INSERT`, `UPDATE`, and `DELETE` denial in both directions. The tests refuse to run if a service-role environment variable is present.
+Open `http://127.0.0.1:3000/login`. Local email confirmation is disabled in `supabase/config.toml` for deterministic development and E2E tests.
 
-## Build
+## Verification
 
-```powershell
-npm.cmd run build
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run test:db
+npm run build
+npx playwright install chromium
+npm run test:e2e
 ```
 
-Run the complete non-database check with:
+Database/RLS and E2E tests require the local Supabase stack and valid non-privileged values in `.env.local`. On the source Windows filesystem, `next dev` has previously compiled slowly; production-path E2E can be run after `npm run build` with `npm run start` in one terminal and `npm run test:e2e` in another. Re-evaluate this on macOS rather than assuming the same limitation.
 
-```powershell
-npm.cmd run check
-```
+The real R2 gate is a separate manual/external validation described in `docs/reports/T-0008-IMPLEMENTATION-REPORT.md`. Direct SDK uploads cannot substitute for the real Uppy/application path.
 
-## Security assumptions
+## Project governance and recovery
 
-- `auth.uid()` is the authenticated identity and `workspaces.owner_user_id` is the V1 ownership rule.
-- Browser-supplied workspace IDs are never trusted; RLS validates ownership for every table operation.
-- The protected layout validates the user with `auth.getUser()` on the server.
-- `proxy.ts` refreshes SSR session cookies; it does not grant access by itself.
-- The workspace bootstrap is `SECURITY INVOKER`, so it cannot bypass RLS.
-- No privileged Supabase key, OAuth token, storage bucket, personal seed, or real organization data belongs in T-0001.
-- Deleting an owned workspace cascades its minimal organizations. Production deletion and export workflows belong to a later ticket.
-
-## Design documentation
-
-The prior conception files are under [`docs/conception`](docs/conception). They describe future modules but do not authorize implementing them as part of T-0001.
+- Current machine-readable project status: `docs/project/PROJECT-STATE.md`.
+- Cross-machine handoff: `.agent/memory/HANDOFF.md`.
+- Compact migration sequence: `.agent/memory/MIGRATION.md`.
+- Ticket contracts and reports: `docs/tickets/` and `docs/reports/`.
+- Never commit real professional documents, identity data, credentials or local audit material.
