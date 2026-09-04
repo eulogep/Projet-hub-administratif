@@ -1,0 +1,1 @@
+export default function DocumentsLoading() { return <main id="main-content" className="mx-auto w-full max-w-6xl px-4 py-7" aria-busy="true"><div className="h-8 w-48 animate-pulse rounded bg-muted" /><div className="mt-6 h-40 animate-pulse rounded-xl bg-muted" /><p className="sr-only">Chargement des documents…</p></main>; }

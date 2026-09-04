@@ -22,10 +22,16 @@
     "db:reset": "supabase db reset"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "3.1121.0",
+    "@aws-sdk/s3-request-presigner": "3.1121.0",
     "@supabase/ssr": "0.12.5",
     "@supabase/supabase-js": "2.112.4",
+    "@uppy/aws-s3": "6.0.0",
+    "@uppy/core": "6.0.0",
+    "@uppy/dashboard": "6.0.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "file-type": "21.3.4",
     "lucide-react": "1.38.0",
     "next": "16.3.3",
     "react": "19.2.8",

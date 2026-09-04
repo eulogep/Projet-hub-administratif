@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@uppy/core/css/style.min.css";
+@import "@uppy/dashboard/css/style.min.css";
 
 :root {
   --background: oklch(0.985 0.003 264);
@@ -104,4 +106,20 @@ body {
 button,
 input {
   font: inherit;
+}
+
+.uppy-Dashboard,
+.uppy-Dashboard-inner {
+  width: 100% !important;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.uppy-Dashboard-AddFiles-title,
+.uppy-Dashboard-note {
+  overflow-wrap: anywhere;
+}
+
+.uppy-Dashboard-note {
+  color: #525252;
 }
